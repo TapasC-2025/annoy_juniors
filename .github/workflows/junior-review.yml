@@ -1,0 +1,22 @@
+name: Junior PR questions
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: write
+
+jobs:
+  ask:
+    runs-on: ubuntu-latest
+    steps:
+      # Base branch checkout so a PR can't edit the bot or the junior list.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+      - run: python3 scripts/junior_review_bot.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
